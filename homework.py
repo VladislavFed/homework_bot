@@ -37,7 +37,6 @@ logging.basicConfig(
 
 def send_message(bot, message):
     """Отправляет сообщение в Telegram чат."""
-
     try:
         logging.info('Отправка статуса в Telegram')
         bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
@@ -49,7 +48,6 @@ def send_message(bot, message):
 
 def get_api_answer(current_timestamp):
     """Делает запрос к единственному эндпоинту API-сервиса."""
-
     timestamp = current_timestamp or int(time.time())
     params_request = {
         'url': ENDPOINT,
@@ -75,7 +73,6 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-
     logging.info('Проверка ответа API на корректность')
     if not isinstance(response, dict):
         raise TypeError('Ответ API не является словарём')
@@ -88,10 +85,9 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Извлекает из информации
-    о конкретной домашней работе статус этой работы.
     """
-
+    Извлекает из информации о конкретной домашней работе статус этой работы.
+    """
     logging.info('Проверяем и извлекаем статус работы')
     if 'homework_name' not in homework:
         raise KeyError('Отсутсвует homework_name в ответе API')
@@ -105,7 +101,6 @@ def parse_status(homework):
 
 def check_tokens():
     """Проверяет доступность переменных окружения."""
-
     logging.info('Проверка наличия всех токенов')
     tokens = {
         'practicum_token': PRACTICUM_TOKEN,
@@ -122,7 +117,6 @@ def check_tokens():
 
 def main():
     """Основная логика работы бота."""
-
     if not check_tokens():
         message = 'Отсутствует токен. Бот остановлен!'
         logging.critical(message)
