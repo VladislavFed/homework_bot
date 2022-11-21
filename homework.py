@@ -22,17 +22,11 @@ ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 
-HOMEWORK_STATUSES = {
+HOMEWORK_VERDICTS = {
     'approved': 'Работа проверена: ревьюеру всё понравилось. Ура!',
     'reviewing': 'Работа взята на проверку ревьюером.',
     'rejected': 'Работа проверена: у ревьюера есть замечания.'
 }
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename=os.path.join(os.path.dirname(__file__), 'main.log'),
-    format='%(asctime)s, %(levelname)s, %(funcName)s, %(message)s',
-)
 
 
 def send_message(bot, message):
@@ -91,8 +85,8 @@ def parse_status(homework):
         raise KeyError('Отсутсвует homework_name в ответе API')
     homework_name = homework['homework_name']
     homework_status = homework.get('status')
-    verdict = HOMEWORK_STATUSES[homework_status]
-    if homework_status not in HOMEWORK_STATUSES:
+    verdict = HOMEWORK_VERDICTS[homework_status]
+    if homework_status not in HOMEWORK_VERDICTS:
         raise ValueError(f'Неизвестный статус работы - {homework_status}')
     return (f'Изменился статус проверки работы "{homework_name}", {verdict}')
 
@@ -100,17 +94,7 @@ def parse_status(homework):
 def check_tokens():
     """Проверяет доступность переменных окружения."""
     logging.info('Проверка наличия всех токенов')
-    tokens = {
-        'practicum_token': PRACTICUM_TOKEN,
-        'telegram_token': TELEGRAM_TOKEN,
-        'telegram_chat_id': TELEGRAM_CHAT_ID,
-    }
-
-    for key, value in tokens.items():
-        if value is None:
-            logging.error(f'Токен {key} отсутствует')
-            return False
-    return True
+    return all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID])
 
 
 def main():
@@ -146,10 +130,15 @@ def main():
             if message != prev_msg:
                 send_message(bot, message)
                 prev_msg = message
-
+                logging.error(message, exc_info=True)
         finally:
             time.sleep(RETRY_TIME)
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.INFO,
+        filename=os.path.join(os.path.dirname(__file__), 'main.log'),
+        format='%(asctime)s, %(levelname)s, %(funcName)s, %(message)s',
+    )
     main()
