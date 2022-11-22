@@ -32,12 +32,12 @@ HOMEWORK_VERDICTS = {
 def send_message(bot, message):
     """Отправляет сообщение в Telegram чат."""
     try:
-        logging.info('Отправка статуса в Telegram')
+        logging.debug('Отправка статуса в Telegram')
         bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
     except telegram.error.TelegramError as error:
         raise TelegramError(f'Ошибка отправки статуса в Telegram: {error}')
     else:
-        logging.info('Статус отправлен в Telegram')
+        logging.error('Статус отправлен в Telegram')
 
 
 def get_api_answer(current_timestamp):
