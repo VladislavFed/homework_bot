@@ -35,6 +35,7 @@ def send_message(bot, message):
         logging.debug('Отправка статуса в Telegram')
         bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
     except telegram.error.TelegramError as error:
+        logging.error('Статус отправлен в Telegram')
         raise TelegramError(f'Ошибка отправки статуса в Telegram: {error}')
     else:
         logging.error('Статус отправлен в Telegram')
