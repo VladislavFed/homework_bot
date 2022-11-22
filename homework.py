@@ -74,7 +74,7 @@ def check_response(response):
         raise EmptyResponse('В ответе отсутствует ключ homeworks')
     homeworks = response.get('homeworks')
     if not isinstance(homeworks, list):
-        raise KeyError('homeworks не является списком')
+        raise TypeError('homeworks не является списком')
     return homeworks
 
 
