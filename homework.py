@@ -83,13 +83,11 @@ def parse_status(homework):
     """Извлекает статус о конкретной домашней работе."""
     logging.info('Проверяем и извлекаем статус работы')
     if 'homework_name' not in homework or 'status' not in homework:
-        logging.error('Статус отсутствует')
         raise KeyError('Отсутсвует homework_name в ответе API')
-    homework_name = homework['homework_name']
+    homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     verdict = HOMEWORK_VERDICTS[homework_status]
     if homework_status not in HOMEWORK_VERDICTS:
-        logging.error('Неизвестный статус')
         raise ValueError(f'Неизвестный статус работы - {homework_status}')
     return (f'Изменился статус проверки работы "{homework_name}", {verdict}')
 
